@@ -6,14 +6,15 @@ TagManager:
   tags:
   - Anchor
   - Enemy
+  - Bullet
   layers:
   - Default
   - TransparentFX
   - Ignore Raycast
-  - 
+  - Gun
   - Water
   - UI
-  - 
+  - Bullet
   - 
   - 
   - 

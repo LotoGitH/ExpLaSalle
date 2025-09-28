@@ -13,17 +13,17 @@ public class FollowPlayer : MonoBehaviour
     public float stopDistance = 2;
     public float attackDamage = 10;
     public float initialLife = 100;
-    public Image lifebar;
+    // public Image lifebar;
     public int pointsOnDefeat = 10;
 
     private GameObject _player;
-    private Animator _animator;
+    // private Animator _animator;
     private bool _isChasing = false;
     private NavMeshAgent _navMeshAgent;
     private float _attackColdownTimeRef;
     private CapsuleCollider _collider;
     private float _currentLife;
-    private ScoreManager _scoreManager;
+    // private ScoreManager _scoreManager;
 
     public float currentLifeEnc
     {
@@ -32,7 +32,7 @@ public class FollowPlayer : MonoBehaviour
         {
             _currentLife = value;
             float percentage = _currentLife / initialLife;
-            lifebar.fillAmount = percentage;
+            // lifebar.fillAmount = percentage;
         }
     }
 
@@ -41,15 +41,17 @@ public class FollowPlayer : MonoBehaviour
     {
         _player = GameObject.FindWithTag("Player");
         _navMeshAgent = gameObject.GetComponent<NavMeshAgent>();
-        _animator = gameObject.GetComponent<Animator>();
+        // _animator = gameObject.GetComponent<Animator>();
         _collider = gameObject.GetComponent<CapsuleCollider>();
         _navMeshAgent.stoppingDistance = stopDistance;
-        _scoreManager = GameObject.FindObjectOfType<ScoreManager>();
+        // _scoreManager = GameObject.FindObjectOfType<ScoreManager>();
+
     }
 
     public void EnableOnSpawn()
     {
         currentLifeEnc = initialLife;
+        StarFollowPlayer();
     }
     
     public void StarFollowPlayer()
@@ -68,13 +70,13 @@ public class FollowPlayer : MonoBehaviour
             if (Vector3.Distance(_player.transform.position, transform.position) <= stopDistance &&
                 _attackColdownTimeRef < Time.time)
             {
-                _animator.SetTrigger("Attack");
+                // _animator.SetTrigger("Attack");
                 _attackColdownTimeRef = Time.time + attackColdown;
-                _player.GetComponent<Life>().TakeDamage(attackDamage);
+                // _player.GetComponent<Life>().TakeDamage(attackDamage);
             }
         }
 
-        _animator.SetFloat("Distance", Vector3.Distance(_player.transform.position, transform.position));
+        // _animator.SetFloat("Distance", Vector3.Distance(_player.transform.position, transform.position));
     }
 
     public void ContinueChasing()
@@ -90,18 +92,21 @@ public class FollowPlayer : MonoBehaviour
         if (currentLifeEnc - damageAmount <= 0)
         {
             currentLifeEnc = 0;
-            _animator.SetBool("Dead", true);
+            // _animator.SetBool("Dead", true);
             _collider.enabled = false;
-            _scoreManager.AddScore(pointsOnDefeat);
+            // _scoreManager.AddScore(pointsOnDefeat);
+            // Esta linea se quita cuando tengamos animación de muerte
+            // _navMeshAgent.isStopped = true;
+            DeactiveEnemy();
         }
         else
         {
             currentLifeEnc = _currentLife - damageAmount;
         }
 
-        _animator.SetTrigger("Hit");
+        // _animator.SetTrigger("Hit");
         _isChasing = false;
-        _navMeshAgent.isStopped = true;
+        // _navMeshAgent.isStopped = true;
     }
 
     public void DeactiveEnemy()
@@ -113,7 +118,7 @@ public class FollowPlayer : MonoBehaviour
     // {
     //     if (other.gameObject.CompareTag("Bullet"))
     //     {
-    //         
+    //         DeactiveEnemy();
     //     }
     // }
 }

@@ -13,7 +13,7 @@ public class SpawnManager : MonoBehaviour
     private GameObject[] _spawnPoints;
 
     //Variables de referencia de tiempo para crear nuevos enemigos
-    private float _spawnRate;
+    private float _spawnRate = 2f;
     private float _spawnTimeRef;
 
     // Start is called before the first frame update
@@ -21,13 +21,13 @@ public class SpawnManager : MonoBehaviour
     {
         _player = GameObject.FindWithTag("Player").transform;
         _spawnPoints = GameObject.FindGameObjectsWithTag("Respawn");
-        ResetSpawner();
+        StartSpawning();
     }
 
     public void ResetSpawner()
     {
         enemyPool.ResetAllBullets();
-        _spawnRate = 3f;
+        _spawnRate = 5f;
         _isSpawningActive = false;
     }
 
@@ -42,12 +42,10 @@ public class SpawnManager : MonoBehaviour
         GameObject e = enemyPool.GetBullet();
         if (e)
         {
-            e.transform.position = _spawnPoints[Random.Range(0, _spawnPoints.Length - 1)].transform.GetChild(0)
-                .transform
-                .position;
+            Debug.Log("Spawn",e.gameObject);
+            e.transform.position = _spawnPoints[Random.Range(0, _spawnPoints.Length - 1)].transform.position;
             e.transform.LookAt(_player);
-            //e.GetComponent<CapsuleCollider>().enabled = true;
-            e.SetActive(true);
+            e.gameObject.SetActive(true);
             e.gameObject.GetComponent<FollowPlayer>().EnableOnSpawn();
         }
     }
@@ -57,6 +55,7 @@ public class SpawnManager : MonoBehaviour
     {
         if (_isSpawningActive && Time.time > _spawnTimeRef)
         {
+           
             _spawnTimeRef = Time.time + _spawnRate;
             SpawnEnemy();
         }

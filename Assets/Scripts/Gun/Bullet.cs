@@ -3,11 +3,13 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+[RequireComponent(typeof(SphereCollider),typeof(Rigidbody))]
 public class Bullet : MonoBehaviour
 {
-    private float _timeToDisable = 2;
+    [SerializeField] private float _timeToDisable = 0.2f;
     private bool _onlyOneHit = true;
     public float gunDamage = 50f;
+    private Coroutine _autoDisableRoutine;
 
     public void BulletEnable()
     {
@@ -17,11 +19,13 @@ public class Bullet : MonoBehaviour
         Rigidbody bulletRigidbody = gameObject.GetComponent<Rigidbody>();
         bulletRigidbody.linearVelocity = Vector3.zero;
         bulletRigidbody.angularVelocity = Vector3.zero;
+        if (_autoDisableRoutine != null) StopCoroutine(_autoDisableRoutine);
+        _autoDisableRoutine = StartCoroutine(AutoDisableByTime());
     }
 
-    IEnumerator AutoDisableByTime(float t)
+    private IEnumerator AutoDisableByTime()
     {
-        yield return new WaitForSeconds(t);
+        yield return new WaitForSeconds(_timeToDisable);
         gameObject.SetActive(false);
     }
 
