@@ -10,20 +10,21 @@ using UnityEngine.UI;
 public class FollowPlayer : MonoBehaviour
 {
     public float attackColdown = 5;
-    public float stopDistance = 2;
+    private float stopDistance = 4;
     public float attackDamage = 10;
     public float initialLife = 100;
-    // public Image lifebar;
+    public Image lifebar;
     public int pointsOnDefeat = 10;
 
     private GameObject _player;
+    private Life _lifePlayer;
     // private Animator _animator;
     private bool _isChasing = false;
     private NavMeshAgent _navMeshAgent;
     private float _attackColdownTimeRef;
     private CapsuleCollider _collider;
     private float _currentLife;
-    // private ScoreManager _scoreManager;
+    private ScoreManager _scoreManager;
 
     public float currentLifeEnc
     {
@@ -32,7 +33,7 @@ public class FollowPlayer : MonoBehaviour
         {
             _currentLife = value;
             float percentage = _currentLife / initialLife;
-            // lifebar.fillAmount = percentage;
+            lifebar.fillAmount = percentage;
         }
     }
 
@@ -40,12 +41,13 @@ public class FollowPlayer : MonoBehaviour
     void Start()
     {
         _player = GameObject.FindWithTag("Player");
+        _lifePlayer = _player.GetComponent<Life>();
         _navMeshAgent = gameObject.GetComponent<NavMeshAgent>();
         // _animator = gameObject.GetComponent<Animator>();
         _collider = gameObject.GetComponent<CapsuleCollider>();
-        _navMeshAgent.stoppingDistance = stopDistance;
-        // _scoreManager = GameObject.FindObjectOfType<ScoreManager>();
-
+        _navMeshAgent.stoppingDistance = 1;
+        _scoreManager = GameObject.FindObjectOfType<ScoreManager>();
+        _attackColdownTimeRef = Time.time;
     }
 
     public void EnableOnSpawn()
@@ -67,12 +69,14 @@ public class FollowPlayer : MonoBehaviour
     {
         if (_isChasing)
         {
+            // Debug.Log("PlayerDistance: "+Vector3.Distance(_player.transform.position, transform.position));
             if (Vector3.Distance(_player.transform.position, transform.position) <= stopDistance &&
                 _attackColdownTimeRef < Time.time)
             {
+                // Debug.Log("attack User");
                 // _animator.SetTrigger("Attack");
                 _attackColdownTimeRef = Time.time + attackColdown;
-                // _player.GetComponent<Life>().TakeDamage(attackDamage);
+                _lifePlayer.TakeDamage(attackDamage);
             }
         }
 
@@ -94,7 +98,7 @@ public class FollowPlayer : MonoBehaviour
             currentLifeEnc = 0;
             // _animator.SetBool("Dead", true);
             _collider.enabled = false;
-            // _scoreManager.AddScore(pointsOnDefeat);
+            _scoreManager.AddScore(pointsOnDefeat);
             // Esta linea se quita cuando tengamos animación de muerte
             // _navMeshAgent.isStopped = true;
             DeactiveEnemy();

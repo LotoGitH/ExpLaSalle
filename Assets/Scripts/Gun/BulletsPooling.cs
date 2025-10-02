@@ -4,8 +4,10 @@ using UnityEngine;
 
 public class BulletsPooling : MonoBehaviour
 {
-    private GameObject[] _bullets;
     public string poolingName;
+    public int maxPoolingObjects = 8;
+    
+    private GameObject[] _bullets;
 
     private int _bulletIndex = 0;
 
@@ -27,8 +29,9 @@ public class BulletsPooling : MonoBehaviour
 
     public GameObject GetBullet()
     {
-        GameObject selected = null;
-        if (CheckAvailability())
+        GameObject selected = null; 
+        int elements = GameObject.FindGameObjectsWithTag(poolingName).Length;
+        if (CheckAvailability() && elements < maxPoolingObjects)
         {
             while (selected == null)
             {

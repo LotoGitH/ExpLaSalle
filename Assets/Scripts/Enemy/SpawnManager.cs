@@ -21,7 +21,7 @@ public class SpawnManager : MonoBehaviour
     {
         _player = GameObject.FindWithTag("Player").transform;
         _spawnPoints = GameObject.FindGameObjectsWithTag("Respawn");
-        StartSpawning();
+        // StartSpawning();
     }
 
     public void ResetSpawner()
@@ -42,7 +42,7 @@ public class SpawnManager : MonoBehaviour
         GameObject e = enemyPool.GetBullet();
         if (e)
         {
-            Debug.Log("Spawn",e.gameObject);
+            // Debug.Log("Spawn",e.gameObject);
             e.transform.position = _spawnPoints[Random.Range(0, _spawnPoints.Length - 1)].transform.position;
             e.transform.LookAt(_player);
             e.gameObject.SetActive(true);

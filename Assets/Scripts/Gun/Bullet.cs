@@ -10,7 +10,12 @@ public class Bullet : MonoBehaviour
     private bool _onlyOneHit = true;
     public float gunDamage = 50f;
     private Coroutine _autoDisableRoutine;
+    private GameManager _gameManager;
 
+    private void Start()
+    {
+        _gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
+    }
     public void BulletEnable()
     {
         _onlyOneHit = true;
@@ -47,6 +52,9 @@ public class Bullet : MonoBehaviour
             Debug.Log("Hit Enemy: " + other.gameObject.name);
             gameObject.GetComponent<SphereCollider>().enabled = false;
             _onlyOneHit = false;
+        }else if (other.gameObject.CompareTag("Start"))
+        {
+            _gameManager.RestartGame();
         }
 
         gameObject.SetActive(false);

@@ -15,7 +15,7 @@ public class ScoreManager : MonoBehaviour
         set
         {
             _bestScore = value;
-            bestScore.text = "Best: " + _bestScore;
+            bestScore.text = "" + _bestScore;
             PlayerPrefs.SetInt("BestScore",_bestScore);
         }
     }
@@ -28,7 +28,7 @@ public class ScoreManager : MonoBehaviour
         set
         {
             _scoreInLevel = value;
-            actualScore.text = "Score: " + _scoreInLevel.ToString();
+            actualScore.text = "" + _scoreInLevel.ToString();
             if (_scoreInLevel > _bestScore)
             {
                 bestScoreEnc = _scoreInLevel;

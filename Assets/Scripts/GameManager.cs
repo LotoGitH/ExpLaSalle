@@ -31,7 +31,7 @@ public class GameManager : MonoBehaviour
 
     public void RestartGame()
     {
-        _mainUI.GetComponent<Animator>().SetTrigger("Start");
+        _mainUI.GetComponent<Animator>().SetTrigger("Dead");
         _life.RestartLife();
         _spawnManager.StartSpawning();
         _scoreManager.RestartLevelScore();
@@ -40,7 +40,7 @@ public class GameManager : MonoBehaviour
 
     public void EndGame()
     {
-        _mainUI.GetComponent<Animator>().SetTrigger("Dead");
+        _mainUI.GetComponent<Animator>().SetTrigger("Start");
         _spawnManager.ResetSpawner();
         _gunController.ResetGunPosition();
         _mainActionSong.Stop();

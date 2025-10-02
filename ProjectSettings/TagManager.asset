@@ -7,6 +7,7 @@ TagManager:
   - Anchor
   - Enemy
   - Bullet
+  - Start
   layers:
   - Default
   - TransparentFX
