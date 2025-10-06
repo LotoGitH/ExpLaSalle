@@ -6,7 +6,7 @@ using UnityEngine.AI;
 using UnityEngine.SocialPlatforms.Impl;
 using UnityEngine.UI;
 
-[RequireComponent(typeof(NavMeshAgent), typeof(Animator),typeof(CapsuleCollider))]
+[RequireComponent(typeof(NavMeshAgent), typeof(Animator), typeof(CapsuleCollider))]
 public class FollowPlayer : MonoBehaviour
 {
     public float attackColdown = 5;
@@ -18,7 +18,7 @@ public class FollowPlayer : MonoBehaviour
 
     private GameObject _player;
     private Life _lifePlayer;
-    // private Animator _animator;
+    private Animator _animator;
     private bool _isChasing = false;
     private NavMeshAgent _navMeshAgent;
     private float _attackColdownTimeRef;
@@ -43,7 +43,7 @@ public class FollowPlayer : MonoBehaviour
         _player = GameObject.FindWithTag("Player");
         _lifePlayer = _player.GetComponent<Life>();
         _navMeshAgent = gameObject.GetComponent<NavMeshAgent>();
-        // _animator = gameObject.GetComponent<Animator>();
+        _animator = gameObject.GetComponent<Animator>();
         _collider = gameObject.GetComponent<CapsuleCollider>();
         _navMeshAgent.stoppingDistance = 1;
         _scoreManager = GameObject.FindObjectOfType<ScoreManager>();
@@ -53,9 +53,9 @@ public class FollowPlayer : MonoBehaviour
     public void EnableOnSpawn()
     {
         currentLifeEnc = initialLife;
-        StarFollowPlayer();
+        // StarFollowPlayer();
     }
-    
+
     public void StarFollowPlayer()
     {
         _navMeshAgent.SetDestination(_player.transform.position);
@@ -74,9 +74,10 @@ public class FollowPlayer : MonoBehaviour
                 _attackColdownTimeRef < Time.time)
             {
                 // Debug.Log("attack User");
-                // _animator.SetTrigger("Attack");
+                _animator.SetBool("stop", true);
+                _animator.SetTrigger("attack");
                 _attackColdownTimeRef = Time.time + attackColdown;
-                _lifePlayer.TakeDamage(attackDamage);
+                // _lifePlayer.TakeDamage(attackDamage);
             }
         }
 
@@ -91,17 +92,22 @@ public class FollowPlayer : MonoBehaviour
         _navMeshAgent.isStopped = false;
     }
 
+    public void attackPlayer()
+    {
+        _lifePlayer.TakeDamage(attackDamage);
+    }
+
     public void GetHit(float damageAmount)
     {
         if (currentLifeEnc - damageAmount <= 0)
         {
             currentLifeEnc = 0;
-            // _animator.SetBool("Dead", true);
+            _animator.SetTrigger("dead");
             _collider.enabled = false;
             _scoreManager.AddScore(pointsOnDefeat);
             // Esta linea se quita cuando tengamos animación de muerte
             // _navMeshAgent.isStopped = true;
-            DeactiveEnemy();
+            // DeactiveEnemy();
         }
         else
         {
@@ -111,6 +117,13 @@ public class FollowPlayer : MonoBehaviour
         // _animator.SetTrigger("Hit");
         _isChasing = false;
         // _navMeshAgent.isStopped = true;
+    }
+
+    public void StopChasing()
+    {
+        _isChasing = false;
+        _navMeshAgent.isStopped = true;
+        _collider.enabled = false;
     }
 
     public void DeactiveEnemy()
